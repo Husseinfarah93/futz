@@ -1,0 +1,19 @@
+{
+  "name": "futz",
+  "version": "1.0.0",
+  "description": "haxball 2.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Husseinfarah93/futz.git"
+  },
+  "author": "Hussein Farah",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Husseinfarah93/futz/issues"
+  },
+  "homepage": "https://github.com/Husseinfarah93/futz#readme"
+}

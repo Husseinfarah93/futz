@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/Husseinfarah93/futz/issues"
   },
-  "homepage": "https://github.com/Husseinfarah93/futz#readme"
+  "homepage": "https://github.com/Husseinfarah93/futz#readme",
+  "dependencies": {
+    "express": "^4.15.0",
+    "nodemon": "^1.11.0"
+  }
 }

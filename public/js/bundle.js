@@ -1,5 +1,19 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 // watchify /Users/Hussein/Desktop/testProjects/futz/public/js/Game.js -o /Users/Hussein/Desktop/testProjects/futz/public/js/bundle.js 
+/* 
+Checklist: 
+- Architecture with Pitch, Background etc 
+- Collision Detection
+- Ball 
+- Physics Engine
+- Sockets + new players
+*/
+
+
+// IMPORTS 
+let Goal;
+let Pitch;
+let Ball;
 let Player = require('./Player')
 
 function Game(viewportHeight, viewportWidth, framerate) {
@@ -62,14 +76,27 @@ Game.prototype.keyPressed = function(player) {
   }
 }
 
+
+
+
 /*  Main METHOD SHIT */
 let game = new Game(500, 500, 30)
 console.log(game)
 game.bindMethods()
 game.mountDOM()
 
-let player = new Player(70, 70, 30, 1, 1, 'blue', game.ctx)
-game.components.push(player)
+
+
+
+
+
+// Create Players
+let player = new Player(70, 70, 30, 1, 1, 'blue', game)
+
+
+
+
+
 
 window.addEventListener('keydown', (e) => {
   let code = e.keyCode
@@ -85,16 +112,22 @@ window.addEventListener('keyup', (e) => {
   }
 })
 
+
+
+
+
 setInterval(() => game.update(player), 1000 / game.framerate)
 },{"./Player":2}],2:[function(require,module,exports){
-function Player(centreX, centreY, radius, weight, speed, team, ctx) {
+function Player(centreX, centreY, radius, weight, speed, team, game) {
   this.centreX = centreX
   this.centreY = centreY
   this.radius = radius 
   this.weight = weight 
   this.speed = speed 
   this.team = team
-  this.ctx = ctx
+  this.game = this.game
+  this.ctx = game.ctx
+  this.game.components.push(this)
 }
 
 Player.prototype.clear = function() {

@@ -1,4 +1,18 @@
 // watchify /Users/Hussein/Desktop/testProjects/futz/public/js/Game.js -o /Users/Hussein/Desktop/testProjects/futz/public/js/bundle.js 
+/* 
+Checklist: 
+- Architecture with Pitch, Background etc 
+- Collision Detection
+- Ball 
+- Physics Engine
+- Sockets + new players
+*/
+
+
+// IMPORTS 
+let Goal;
+let Pitch;
+let Ball;
 let Player = require('./Player')
 
 function Game(viewportHeight, viewportWidth, framerate) {
@@ -61,14 +75,27 @@ Game.prototype.keyPressed = function(player) {
   }
 }
 
+
+
+
 /*  Main METHOD SHIT */
 let game = new Game(500, 500, 30)
 console.log(game)
 game.bindMethods()
 game.mountDOM()
 
-let player = new Player(70, 70, 30, 1, 1, 'blue', game.ctx)
-game.components.push(player)
+
+
+
+
+
+// Create Players
+let player = new Player(70, 70, 30, 1, 1, 'blue', game)
+
+
+
+
+
 
 window.addEventListener('keydown', (e) => {
   let code = e.keyCode
@@ -83,5 +110,9 @@ window.addEventListener('keyup', (e) => {
       game.keysDown[code].val = false
   }
 })
+
+
+
+
 
 setInterval(() => game.update(player), 1000 / game.framerate)

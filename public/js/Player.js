@@ -1,11 +1,13 @@
-function Player(centreX, centreY, radius, weight, speed, team, ctx) {
+function Player(centreX, centreY, radius, weight, speed, team, game) {
   this.centreX = centreX
   this.centreY = centreY
   this.radius = radius 
   this.weight = weight 
   this.speed = speed 
   this.team = team
-  this.ctx = ctx
+  this.game = this.game
+  this.ctx = game.ctx
+  this.game.components.push(this)
 }
 
 Player.prototype.clear = function() {

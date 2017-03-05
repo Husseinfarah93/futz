@@ -12,9 +12,9 @@ Checklist:
 
 // IMPORTS 
 let Goal;
-let Pitch;
+let Pitch = require('./Pitch.js');
 let Ball;
-let Player = require('./Player')
+let Player = require('./Player.js')
 
 function Game(viewportHeight, viewportWidth, framerate) {
     this.components = []
@@ -40,7 +40,7 @@ Game.prototype.mountDOM = function() {
 // Check what is more efficient clearing the whole canvas or the individual pieces
 Game.prototype.clear = function() {
   let list = this.components 
-  this.ctx.clearRect(0, 0, this.canvas.height, this.canvas.width)
+  this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
   this.drawBackground()
   // for(let i = 0; i < list.length; i++) {
   //   let component = list[i]
@@ -82,24 +82,27 @@ Game.prototype.drawBackground = function() {
   let y = 0 
   let height = this.canvas.height
   let width = this.canvas.width
-  this.ctx.fillStyle = 'green'
-  this.ctx.fillRect(x, y, height, width)
+  this.ctx.fillStyle = '#167F39'
+  this.ctx.fillRect(x, y, width, height)
 }
 
 
 // Setup Game
-let game = new Game(500, 500, 30)
+let game = new Game(400, 700, 30)
 console.log(game)
 game.bindMethods()
 game.mountDOM()
 game.drawBackground()
 
-
+// Create Pitch 
+// Pitch(xOrigin, yOrigin, pitchHeight, pitchWidth, game)
+let pitch = new Pitch(0, 50, 300, 700, game)
 
 
 
 
 // Create Players
+// Player(centreX, centreY, radius, weight, speed, team, game
 let player = new Player(70, 70, 15, 1, 1, 'white', game)
 
 
@@ -124,7 +127,31 @@ window.addEventListener('keyup', (e) => {
 
 
 setInterval(() => game.update(player), 1000 / game.framerate)
-},{"./Player":2}],2:[function(require,module,exports){
+},{"./Pitch.js":2,"./Player.js":3}],2:[function(require,module,exports){
+function Pitch(xOrigin, yOrigin, pitchHeight, pitchWidth, game) {
+  this.x = xOrigin 
+  this.y = yOrigin
+  this.height = pitchHeight 
+  this.width = pitchWidth 
+  this.game = game 
+  this.ctx = this.game.ctx
+  this.game.components.push(this)
+}
+
+
+Pitch.prototype.draw = function() {
+  let ctx = this.ctx 
+  ctx.fillStyle = '#45BF55'
+  ctx.fillRect(this.x, this.y, this.width, this.height)
+}
+
+Pitch.prototype.clear = function() {
+  let ctx = this.ctx 
+  ctx.clearRect(this.x, this.y, this.width, this.height)
+}
+
+module.exports = Pitch
+},{}],3:[function(require,module,exports){
 function Player(centreX, centreY, radius, weight, speed, team, game) {
   this.centreX = centreX
   this.centreY = centreY

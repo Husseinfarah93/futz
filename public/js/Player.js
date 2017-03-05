@@ -7,7 +7,6 @@ function Player(centreX, centreY, radius, weight, speed, team) {
   this.team = team
 }
 
-
 Player.prototype.clear = function(ctx) {
   ctx.clearRect(this.centreX - this.radius, this.centreY - this.radius, this.radius * 2, this.radius * 2)
 }
@@ -21,16 +20,16 @@ Player.prototype.draw = function(ctx) {
 
 Player.prototype.move = function(direction) {
   if(direction === "UP") {
-    this.centreY = (this.centreY - 1) * this.speed
+    this.centreY = (this.centreY - 10) * this.speed
   }
   else if(direction === "RIGHT") {
-    this.centreX = (this.centreX + 1) * this.speed
+    this.centreX = (this.centreX + 10) * this.speed
   }
   else if(direction === "DOWN") {
-    this.centreY = (this.centreY + 1) * this.speed
+    this.centreY = (this.centreY + 10) * this.speed
   }
   else if(direction === "LEFT") {
-    this.centreX = (this.centreX - 1) * this.speed
+    this.centreX = (this.centreX - 10) * this.speed
   }
 }
 

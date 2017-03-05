@@ -2,13 +2,14 @@
 // watchify /Users/Hussein/Desktop/testProjects/futz/public/js/Game.js -o /Users/Hussein/Desktop/testProjects/futz/public/js/bundle.js 
 let Player = require('./Player')
 
-function Game(viewportHeight, viewportWidth) {
+function Game(viewportHeight, viewportWidth, framerate) {
     this.components = []
     this.canvas = document.createElement('canvas')
     this.canvas.id = 'viewport'
     this.ctx = this.canvas.getContext('2d')
     this.canvas.height = viewportHeight
     this.canvas.width = viewportWidth
+    this.framerate = framerate
 }
 
 
@@ -18,29 +19,51 @@ Game.prototype.mountDOM = function() {
   body.appendChild(this.canvas)
 }
 
+// Check what is more efficient clearing the whole canvas or the individual pieces
 Game.prototype.clear = function() {
   let list = this.components 
+  this.ctx.clearRect(0, 0, this.canvas.height, this.canvas.width)
+  // for(let i = 0; i < list.length; i++) {
+  //   let component = list[i]
+  //   component.clear(this.ctx)
+  // }
+}
+
+Game.prototype.draw = function() {
+  let list = this.components 
   for(let i = 0; i < list.length; i++) {
-    // clear rect
+    let component = list[i]
+    component.draw(this.ctx)
   }
 }
 
+Game.prototype.update = function() {
+  this.clear()
+  this.draw()
+}
 
-let game = new Game(300, 300)
+Game.prototype.bindMethods = function() {
+  this.update = this.update.bind(this)
+  this.draw = this.draw.bind(this)
+  this.clear = this.clear.bind(this)
+}
+
+
+/*  Main METHOD SHIT */
+let game = new Game(300, 300, 30)
+game.bindMethods()
 game.mountDOM()
 let player = new Player(70, 70, 50, 1, 1, 'blue')
-let isClicked = false
-window.addEventListener('click', () => {
-  if(isClicked) {
-    player.clear(game.ctx)
-    isClicked = false
-  }
-  else {
-    player.move('RIGHT')
-    player.draw(game.ctx)
-    isClicked = true
-  }
+game.components.push(player)
+window.addEventListener('keydown', (e) => {
+  let code = e.keyCode
+  if(code === 37) player.move("LEFT")
+  else if(code === 38) player.move("UP")
+  else if(code === 39) player.move("RIGHT")
+  else if(code === 40) player.move("DOWN")
 })
+window.addEventListener('click', game.update)
+setInterval(game.update, 1000 / game.framerate)
 },{"./Player":2}],2:[function(require,module,exports){
 function Player(centreX, centreY, radius, weight, speed, team) {
   this.centreX = centreX
@@ -50,7 +73,6 @@ function Player(centreX, centreY, radius, weight, speed, team) {
   this.speed = speed 
   this.team = team
 }
-
 
 Player.prototype.clear = function(ctx) {
   ctx.clearRect(this.centreX - this.radius, this.centreY - this.radius, this.radius * 2, this.radius * 2)
@@ -65,16 +87,16 @@ Player.prototype.draw = function(ctx) {
 
 Player.prototype.move = function(direction) {
   if(direction === "UP") {
-    this.centreY = (this.centreY - 1) * this.speed
+    this.centreY = (this.centreY - 10) * this.speed
   }
   else if(direction === "RIGHT") {
-    this.centreX = (this.centreX + 1) * this.speed
+    this.centreX = (this.centreX + 10) * this.speed
   }
   else if(direction === "DOWN") {
-    this.centreY = (this.centreY + 1) * this.speed
+    this.centreY = (this.centreY + 10) * this.speed
   }
   else if(direction === "LEFT") {
-    this.centreX = (this.centreX - 1) * this.speed
+    this.centreX = (this.centreX - 10) * this.speed
   }
 }
 

@@ -40,6 +40,7 @@ Game.prototype.mountDOM = function() {
 Game.prototype.clear = function() {
   let list = this.components 
   this.ctx.clearRect(0, 0, this.canvas.height, this.canvas.width)
+  this.drawBackground()
   // for(let i = 0; i < list.length; i++) {
   //   let component = list[i]
   //   component.clear(this.ctx)
@@ -75,14 +76,22 @@ Game.prototype.keyPressed = function(player) {
   }
 }
 
+Game.prototype.drawBackground = function() {
+  let x = 0
+  let y = 0 
+  let height = this.canvas.height
+  let width = this.canvas.width
+  this.ctx.fillStyle = 'green'
+  this.ctx.fillRect(x, y, height, width)
+}
 
 
-
-/*  Main METHOD SHIT */
+// Setup Game
 let game = new Game(500, 500, 30)
 console.log(game)
 game.bindMethods()
 game.mountDOM()
+game.drawBackground()
 
 
 
@@ -90,13 +99,12 @@ game.mountDOM()
 
 
 // Create Players
-let player = new Player(70, 70, 30, 1, 1, 'blue', game)
+let player = new Player(70, 70, 15, 1, 1, 'white', game)
 
 
 
 
-
-
+// Add event listeners
 window.addEventListener('keydown', (e) => {
   let code = e.keyCode
   if(game.keysDown[code] !== undefined) {
@@ -110,7 +118,6 @@ window.addEventListener('keyup', (e) => {
       game.keysDown[code].val = false
   }
 })
-
 
 
 

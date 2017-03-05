@@ -5,7 +5,7 @@ function Player(centreX, centreY, radius, weight, speed, team, game) {
   this.weight = weight 
   this.speed = speed 
   this.team = team
-  this.game = this.game
+  this.game = game
   this.ctx = game.ctx
   this.game.components.push(this)
 }
@@ -15,7 +15,7 @@ Player.prototype.clear = function() {
 }
 
 Player.prototype.draw = function(ctx) {
-  ctx.fillStyle = 'green'
+  ctx.fillStyle = this.team
   ctx.beginPath() 
   ctx.arc(this.centreX, this.centreY, this.radius, 0, 2 * Math.PI, false)
   ctx.fill() 

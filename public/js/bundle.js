@@ -41,6 +41,7 @@ Game.prototype.mountDOM = function() {
 Game.prototype.clear = function() {
   let list = this.components 
   this.ctx.clearRect(0, 0, this.canvas.height, this.canvas.width)
+  this.drawBackground()
   // for(let i = 0; i < list.length; i++) {
   //   let component = list[i]
   //   component.clear(this.ctx)
@@ -76,14 +77,22 @@ Game.prototype.keyPressed = function(player) {
   }
 }
 
+Game.prototype.drawBackground = function() {
+  let x = 0
+  let y = 0 
+  let height = this.canvas.height
+  let width = this.canvas.width
+  this.ctx.fillStyle = 'green'
+  this.ctx.fillRect(x, y, height, width)
+}
 
 
-
-/*  Main METHOD SHIT */
+// Setup Game
 let game = new Game(500, 500, 30)
 console.log(game)
 game.bindMethods()
 game.mountDOM()
+game.drawBackground()
 
 
 
@@ -91,13 +100,12 @@ game.mountDOM()
 
 
 // Create Players
-let player = new Player(70, 70, 30, 1, 1, 'blue', game)
+let player = new Player(70, 70, 15, 1, 1, 'white', game)
 
 
 
 
-
-
+// Add event listeners
 window.addEventListener('keydown', (e) => {
   let code = e.keyCode
   if(game.keysDown[code] !== undefined) {
@@ -115,7 +123,6 @@ window.addEventListener('keyup', (e) => {
 
 
 
-
 setInterval(() => game.update(player), 1000 / game.framerate)
 },{"./Player":2}],2:[function(require,module,exports){
 function Player(centreX, centreY, radius, weight, speed, team, game) {
@@ -125,7 +132,7 @@ function Player(centreX, centreY, radius, weight, speed, team, game) {
   this.weight = weight 
   this.speed = speed 
   this.team = team
-  this.game = this.game
+  this.game = game
   this.ctx = game.ctx
   this.game.components.push(this)
 }
@@ -135,7 +142,7 @@ Player.prototype.clear = function() {
 }
 
 Player.prototype.draw = function(ctx) {
-  ctx.fillStyle = 'green'
+  ctx.fillStyle = this.team
   ctx.beginPath() 
   ctx.arc(this.centreX, this.centreY, this.radius, 0, 2 * Math.PI, false)
   ctx.fill() 

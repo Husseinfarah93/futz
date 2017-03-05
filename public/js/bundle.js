@@ -10,6 +10,12 @@ function Game(viewportHeight, viewportWidth, framerate) {
     this.canvas.height = viewportHeight
     this.canvas.width = viewportWidth
     this.framerate = framerate
+    this.keysDown = {
+      "37": {val: false, direction: "LEFT"}, 
+      "38": {val: false, direction: "UP"},
+      "39": {val: false, direction: "RIGHT"}, 
+      "40": {val: false, direction: "DOWN"}
+    }
 }
 
 
@@ -46,22 +52,42 @@ Game.prototype.bindMethods = function() {
   this.update = this.update.bind(this)
   this.draw = this.draw.bind(this)
   this.clear = this.clear.bind(this)
+  this.mountDom = this.mountDOM.bind(this)
+  this.keyPressed = this.keyPressed.bind(this)
 }
 
+
+Game.prototype.keyPressed = function(player) {
+  let keys = Object.keys(this.keysDown)
+  for(let i = 0; i < keys.length; i++) {
+    if(this.keysDown[keys[i]].val === true) player.move(this.keysDown[keys[i]].direction)
+  }
+}
 
 /*  Main METHOD SHIT */
 let game = new Game(500, 500, 30)
 game.bindMethods()
 game.mountDOM()
+
 let player = new Player(70, 70, 50, 1, 1, 'blue')
 game.components.push(player)
+
 window.addEventListener('keydown', (e) => {
   let code = e.keyCode
-  if(code === 37) player.move("LEFT")
-  else if(code === 38) player.move("UP")
-  else if(code === 39) player.move("RIGHT")
-  else if(code === 40) player.move("DOWN")
+  if(game.keysDown[code] !== undefined) {
+    game.keysDown[code].val = true 
+    game.keyPressed(player)
+  }
 })
+
+window.addEventListener('keyup', (e) => {
+  let code = e.keyCode
+  if(game.keysDown[code] !== undefined) {
+      game.keysDown[code].val = false
+  }
+})
+
+
 window.addEventListener('click', game.update)
 setInterval(game.update, 1000 / game.framerate)
 },{"./Player":2}],2:[function(require,module,exports){

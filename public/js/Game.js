@@ -63,10 +63,11 @@ Game.prototype.keyPressed = function(player) {
 
 /*  Main METHOD SHIT */
 let game = new Game(500, 500, 30)
+console.log(game)
 game.bindMethods()
 game.mountDOM()
 
-let player = new Player(70, 70, 30, 1, 1, 'blue')
+let player = new Player(70, 70, 30, 1, 1, 'blue', game.ctx)
 game.components.push(player)
 
 window.addEventListener('keydown', (e) => {

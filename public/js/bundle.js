@@ -64,10 +64,11 @@ Game.prototype.keyPressed = function(player) {
 
 /*  Main METHOD SHIT */
 let game = new Game(500, 500, 30)
+console.log(game)
 game.bindMethods()
 game.mountDOM()
 
-let player = new Player(70, 70, 30, 1, 1, 'blue')
+let player = new Player(70, 70, 30, 1, 1, 'blue', game.ctx)
 game.components.push(player)
 
 window.addEventListener('keydown', (e) => {
@@ -86,17 +87,18 @@ window.addEventListener('keyup', (e) => {
 
 setInterval(() => game.update(player), 1000 / game.framerate)
 },{"./Player":2}],2:[function(require,module,exports){
-function Player(centreX, centreY, radius, weight, speed, team) {
+function Player(centreX, centreY, radius, weight, speed, team, ctx) {
   this.centreX = centreX
   this.centreY = centreY
   this.radius = radius 
   this.weight = weight 
   this.speed = speed 
   this.team = team
+  this.ctx = ctx
 }
 
-Player.prototype.clear = function(ctx) {
-  ctx.clearRect(this.centreX - this.radius, this.centreY - this.radius, this.radius * 2, this.radius * 2)
+Player.prototype.clear = function() {
+  this.ctx.clearRect(this.centreX - this.radius, this.centreY - this.radius, this.radius * 2, this.radius * 2)
 }
 
 Player.prototype.draw = function(ctx) {
@@ -108,16 +110,16 @@ Player.prototype.draw = function(ctx) {
 
 Player.prototype.move = function(direction) {
   if(direction === "UP") {
-    this.centreY = (this.centreY - 10) * this.speed
+    this.centreY = this.centreY - this.radius > 0 ? (this.centreY - 5) * this.speed : this.centreY
   }
   else if(direction === "RIGHT") {
-    this.centreX = (this.centreX + 10) * this.speed
+    this.centreX = this.centreX + this.radius < this.ctx.canvas.width ? (this.centreX + 5) * this.speed : this.centreX
   }
   else if(direction === "DOWN") {
-    this.centreY = (this.centreY + 10) * this.speed
+    this.centreY = this.centreY + this.radius < this.ctx.canvas.height ? (this.centreY + 5) * this.speed : this.centreY
   }
   else if(direction === "LEFT") {
-    this.centreX = (this.centreX - 10) * this.speed
+    this.centreX = this.centreX - this.radius > 0 ? (this.centreX - 5) * this.speed : this.centreX
   }
 }
 

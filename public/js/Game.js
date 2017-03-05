@@ -49,7 +49,7 @@ Game.prototype.bindMethods = function() {
 
 
 /*  Main METHOD SHIT */
-let game = new Game(300, 300, 30)
+let game = new Game(500, 500, 30)
 game.bindMethods()
 game.mountDOM()
 let player = new Player(70, 70, 50, 1, 1, 'blue')

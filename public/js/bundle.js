@@ -18,8 +18,6 @@ function Game(viewportHeight, viewportWidth, framerate) {
     }
 }
 
-
-
 Game.prototype.mountDOM = function() {
   let body = document.getElementsByTagName('body')[0]
   body.appendChild(this.canvas)
@@ -43,7 +41,8 @@ Game.prototype.draw = function() {
   }
 }
 
-Game.prototype.update = function() {
+Game.prototype.update = function(player) {
+  this.keyPressed(player)
   this.clear()
   this.draw()
 }
@@ -55,7 +54,6 @@ Game.prototype.bindMethods = function() {
   this.mountDom = this.mountDOM.bind(this)
   this.keyPressed = this.keyPressed.bind(this)
 }
-
 
 Game.prototype.keyPressed = function(player) {
   let keys = Object.keys(this.keysDown)
@@ -69,14 +67,13 @@ let game = new Game(500, 500, 30)
 game.bindMethods()
 game.mountDOM()
 
-let player = new Player(70, 70, 50, 1, 1, 'blue')
+let player = new Player(70, 70, 30, 1, 1, 'blue')
 game.components.push(player)
 
 window.addEventListener('keydown', (e) => {
   let code = e.keyCode
   if(game.keysDown[code] !== undefined) {
     game.keysDown[code].val = true 
-    game.keyPressed(player)
   }
 })
 
@@ -87,9 +84,7 @@ window.addEventListener('keyup', (e) => {
   }
 })
 
-
-window.addEventListener('click', game.update)
-setInterval(game.update, 1000 / game.framerate)
+setInterval(() => game.update(player), 1000 / game.framerate)
 },{"./Player":2}],2:[function(require,module,exports){
 function Player(centreX, centreY, radius, weight, speed, team) {
   this.centreX = centreX

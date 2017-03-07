@@ -8,16 +8,19 @@ function Player(centreX, centreY, radius, weight, speed, team, game) {
   this.game = game
   this.ctx = game.ctx
   this.game.components.push(this)
+  this.matterObj = this.game.Matter.Bodies.circle(this.centreX, this.centreY, this.radius)
+  this.game.Matter.World.add(this.game.engine.world, this.matterObj)
 }
 
-Player.prototype.clear = function() {
-  this.ctx.clearRect(this.centreX - this.radius, this.centreY - this.radius, this.radius * 2, this.radius * 2)
+
+Player.prototype.update = function() {
+  this.game.Matter.Engine.update(this.game.engine, 1000 / this.game.framerate)
 }
 
 Player.prototype.draw = function(ctx) {
   ctx.fillStyle = this.team
   ctx.beginPath() 
-  ctx.arc(this.centreX, this.centreY, this.radius, 0, 2 * Math.PI, false)
+  ctx.arc(this.matterObj.position.x , this.matterObj.position.y, this.matterObj.circleRadius, 0, 2 * Math.PI, false)
   ctx.fill() 
 }
 

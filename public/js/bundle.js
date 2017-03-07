@@ -10206,21 +10206,9 @@ let Pitch = require('./Pitch.js'),
     Events = Matter.Events
 
 
-var engine = Engine.create();
-// // create a renderer
-// var render = Render.create({
-//     element: document.body,
-//     engine: engine
-// });
-// // create two boxes and a ground
-// var boxA = Bodies.rectangle(400, 200, 80, 80);
-engine.world.gravity.y = 0
-// // add all of the bodies to the world
-// World.add(engine.world, [boxA]);
-// // run the engine
-// Engine.run(engine);
-// // run the renderer
-// Render.run(render);
+  var engine = Engine.create();
+  engine.world.gravity.y = 0
+
 
 
   function Game(viewportHeight, viewportWidth, framerate, engine) {
@@ -10269,6 +10257,9 @@ engine.world.gravity.y = 0
   }
 
   Game.prototype.drawBackground = function() {
+    let backgroundImage = new Image() 
+    backgroundImage.src = 'https://thumbs.dreamstime.com/t/soccer-field-vector-illustration-football-lines-areas-marking-football-size-regulations-m-69316203.jpg'
+    
     let x = 0
     let y = 0 
     let height = this.canvas.height
@@ -10303,13 +10294,18 @@ engine.world.gravity.y = 0
   game.bindMethods()
   game.mountDOM()
   let ground = Bodies.rectangle(game.canvas.width/2, game.canvas.height, game.canvas.width, 1, {isStatic: true})
+  ground.name = 'ground'
   let ceiling = Bodies.rectangle(game.canvas.width/2, 0, game.canvas.width, 1, {isStatic: true})
+  ceiling.name = 'ceiling'
   let rightWall = Bodies.rectangle(game.canvas.width, game.canvas.height / 2, 1, game.canvas.height, {isStatic: true})
+  rightWall.name = 'rightWall'
   let leftWall = Bodies.rectangle(0, game.canvas.height / 2, 1, game.canvas.height, {isStatic: true})
+  leftWall.name = 'leftWall'
   World.add(engine.world, [ground, ceiling, rightWall, leftWall]);
-  // Player(centreX, centreY, radius, weight, speed, team, game) {
-  let player = new Player(300, 300, 10, 1, 1, 'white', game)
-  let player2 = new Player(350, 300, 10, 1, 1, 'white', game)
+  // Player(centreX, centreY, radius, weight, speed, team, game, id) {
+  let player = new Player(300, 300, 10, 1, 1, 'white', game, 'player1')
+  let player2 = new Player(350, 300, 10, 1, 1, 'white', game, 'player2')
+  let ball =  new Player(200, 200, 5, 1, 0.5, 'black', game, 'ball')
   console.log(player)
 
   let btn = document.createElement('button') 
@@ -10327,10 +10323,47 @@ engine.world.gravity.y = 0
     else if(e.keyCode === 38) player.matterObj.force.y -= 0.001
     else if(e.keyCode === 39) player.matterObj.force.x += 0.001
     else if(e.keyCode === 40) player.matterObj.force.y += 0.001
+    else if(e.keyCode === 80) moveBallBackToMiddle()
   })
 
 
-  // var ground = Bodies.rectangle(400, 610, 810, 60, { isStatic: true });
+  Events.on(engine, 'collisionStart', event => {
+    let pairs = event.pairs 
+    for(let i = 0; i < pairs.length; i++) {
+      let pair = pairs[i] 
+      let bodyA = pair.bodyA 
+      let bodyB = pair.bodyB
+      // console.log(bodyA.name, bodyB.name)
+      // console.log(bodyA.name === 'ball')
+      if((bodyA.name === 'ball' || bodyA.name === 'rightWall') && (bodyB.name === 'ball' || bodyB.name === 'rightWall')) {
+        increaseSCoreRight()
+        moveBallBackToMiddle()
+      }
+      else if((bodyA.name === 'ball' || bodyA.name === 'leftWall') && (bodyB.name === 'ball' || bodyB.name === 'leftWall')) {
+        increaseScoreLeft()
+        moveBallBackToMiddle()
+      }
+    }
+  })
+
+  let scoreLeft = document.createElement('p')
+  scoreLeft.innerHTML = 0
+  let scoreRight = document.createElement('p')
+  scoreRight.innerHTML = 0 
+  document.body.appendChild(scoreLeft)
+  document.body.appendChild(scoreRight)
+
+  function increaseScoreLeft() { 
+    scoreLeft.innerHTML = parseInt(scoreLeft.innerHTML) + 1 
+  }
+  function increaseSCoreRight() {
+    scoreRight.innerHTML = parseInt(scoreRight.innerHTML) + 1 
+  }
+
+  function moveBallBackToMiddle() {
+    Matter.Body.setPosition(ball.matterObj, {x: game.canvas.width / 2, y: game.canvas.height / 2})
+    Matter.Body.setVelocity(ball.matterObj, {x: 0, y: 0})
+  }
 },{"./Pitch.js":3,"./Player.js":4,"matter-js":1}],3:[function(require,module,exports){
 function Pitch(xOrigin, yOrigin, pitchHeight, pitchWidth, friction, game) {
   this.x = xOrigin 
@@ -10361,7 +10394,7 @@ Pitch.prototype.changeFriction = function(newFriction) {
 
 module.exports = Pitch
 },{}],4:[function(require,module,exports){
-function Player(centreX, centreY, radius, weight, speed, team, game) {
+function Player(centreX, centreY, radius, weight, speed, team, game, id) {
   this.centreX = centreX
   this.centreY = centreY
   this.radius = radius 
@@ -10373,11 +10406,12 @@ function Player(centreX, centreY, radius, weight, speed, team, game) {
   this.game.components.push(this)
   this.matterObj = this.game.Matter.Bodies.circle(this.centreX, this.centreY, this.radius)
   this.game.Matter.World.add(this.game.engine.world, this.matterObj)
+  this.matterObj.name = id
 }
 
 
 Player.prototype.update = function() {
-  this.game.Matter.Engine.update(this.game.engine, 1000 / this.game.framerate)
+  this.game.Matter.Engine.update(this.game.engine)
 }
 
 Player.prototype.draw = function(ctx) {

@@ -1,4 +1,4 @@
-function Player(centreX, centreY, radius, weight, speed, team, game) {
+function Player(centreX, centreY, radius, weight, speed, team, game, id) {
   this.centreX = centreX
   this.centreY = centreY
   this.radius = radius 
@@ -10,11 +10,12 @@ function Player(centreX, centreY, radius, weight, speed, team, game) {
   this.game.components.push(this)
   this.matterObj = this.game.Matter.Bodies.circle(this.centreX, this.centreY, this.radius)
   this.game.Matter.World.add(this.game.engine.world, this.matterObj)
+  this.matterObj.name = id
 }
 
 
 Player.prototype.update = function() {
-  this.game.Matter.Engine.update(this.game.engine, 1000 / this.game.framerate)
+  this.game.Matter.Engine.update(this.game.engine)
 }
 
 Player.prototype.draw = function(ctx) {

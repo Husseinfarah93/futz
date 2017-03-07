@@ -10303,9 +10303,9 @@ let Pitch = require('./Pitch.js'),
   leftWall.name = 'leftWall'
   World.add(engine.world, [ground, ceiling, rightWall, leftWall]);
   // Player(centreX, centreY, radius, weight, speed, team, game, id) {
-  let player = new Player(300, 300, 10, 1, 1, 'white', game, 'player1')
-  let player2 = new Player(350, 300, 10, 1, 1, 'white', game, 'player2')
-  let ball =  new Player(200, 200, 5, 1, 0.5, 'black', game, 'ball')
+  let player = new Player(game.canvas.width / 4, game.canvas.height / 2, 10, 1, 1, 'white', game, 'player1')
+  let player2 = new Player(3 * game.canvas.width / 4, game.canvas.height / 2, 10, 1, 1, 'purple', game, 'player2')
+  let ball =  new Player(game.canvas.width / 2, game.canvas.height / 2, 5, 1, 0.5, 'black', game, 'ball')
   console.log(player)
 
   let btn = document.createElement('button') 
@@ -10323,7 +10323,10 @@ let Pitch = require('./Pitch.js'),
     else if(e.keyCode === 38) player.matterObj.force.y -= 0.001
     else if(e.keyCode === 39) player.matterObj.force.x += 0.001
     else if(e.keyCode === 40) player.matterObj.force.y += 0.001
-    else if(e.keyCode === 80) moveBallBackToMiddle()
+    if(e.keyCode === 65) player2.matterObj.force.x -= 0.001
+    else if(e.keyCode === 87) player2.matterObj.force.y -= 0.001
+    else if(e.keyCode === 68) player2.matterObj.force.x += 0.001
+    else if(e.keyCode === 83) player2.matterObj.force.y += 0.001
   })
 
 

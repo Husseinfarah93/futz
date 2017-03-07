@@ -118,13 +118,18 @@ engine.world.gravity.y = 0
   console.log(game)
   game.bindMethods()
   game.mountDOM()
+  let ground = Bodies.rectangle(game.canvas.width/2, game.canvas.height, game.canvas.width, 1, {isStatic: true})
+  let ceiling = Bodies.rectangle(game.canvas.width/2, 0, game.canvas.width, 1, {isStatic: true})
+  let rightWall = Bodies.rectangle(game.canvas.width, game.canvas.height / 2, 1, game.canvas.height, {isStatic: true})
+  let leftWall = Bodies.rectangle(0, game.canvas.height / 2, 1, game.canvas.height, {isStatic: true})
+  World.add(engine.world, [ground, ceiling, rightWall, leftWall]);
   // Player(centreX, centreY, radius, weight, speed, team, game) {
-  let player = new Player(300, 300, 50, 1, 1, 'white', game)
-  let player2 = new Player(350, 300, 50, 1, 1, 'white', game)
+  let player = new Player(300, 300, 10, 1, 1, 'white', game)
+  let player2 = new Player(350, 300, 10, 1, 1, 'white', game)
   console.log(player)
 
   let btn = document.createElement('button') 
-  btn.innerHTML = 'press me fam'
+  btn.innerHTML = 'stop game loop'
   document.body.appendChild(btn)
   let intervalId = setInterval(game.gameLoop, 1000 / game.framerate)
 
@@ -132,8 +137,13 @@ engine.world.gravity.y = 0
     clearInterval(intervalId)
   })
 
-  let btn2 = document.createElement('button')
-  btn2.innerHTML = 'add force'
-  btn2.addEventListener('click', () => {
-    player
+
+  window.addEventListener('keydown', e => {
+    if(e.keyCode === 37) player.matterObj.force.x -= 0.001
+    else if(e.keyCode === 38) player.matterObj.force.y -= 0.001
+    else if(e.keyCode === 39) player.matterObj.force.x += 0.001
+    else if(e.keyCode === 40) player.matterObj.force.y += 0.001
   })
+
+
+  // var ground = Bodies.rectangle(400, 610, 810, 60, { isStatic: true });

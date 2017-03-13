@@ -15,7 +15,7 @@ Player.prototype.update = function() {
 Player.prototype.draw = function(ctx) {
   ctx.fillStyle = this.team
   ctx.beginPath() 
-  // ctx.arc(this.matterObj.position.x , this.matterObj.position.y, this.matterObj.circleRadius, 0, 2 * Math.PI, false)
+  ctx.arc(this.centreX, this.centreY, this.radius, 0, 2 * Math.PI, false)
   ctx.fill() 
 }
 

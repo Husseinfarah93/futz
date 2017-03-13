@@ -1,0 +1,30 @@
+/*
+Server Update Loop  
+
+Initial check 
+Do all logic and updating server side 
+Send Game state to front end 
+
+Front end 
+Move updates or whatever 
+Send to back end 
+
+Back end updates current position of shit 
+Does all calculations 
+Sends Game state back to client 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+*/

@@ -1,4 +1,3 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 function FrontEndGame(viewportHeight, viewportWidth, player) {
   this.components = []
   this.canvas = document.createElement('canvas')
@@ -102,48 +101,3 @@ FrontEndGame.prototype.getCorrectPlayer = function() {
 }
 
 module.exports = FrontEndGame
-},{}],2:[function(require,module,exports){
-// Imports 
-let socket = io()
-let framerate = 30
-let frontEndGame = require('./FrontEndGame.js')
-let gameState;
-
-let clearButton = document.createElement('button')
-clearButton.innerHTML = 'clear'
-document.body.appendChild(clearButton)
-
-
-
-
-// Socket Events 
-socket.on('initialiseGameState', gameStateComponents => {
-  console.log("HERE", typeof gameStateComponents)
-  gameState = new frontEndGame(350, 500, gameStateComponents.player)
-  gameState.components = gameStateComponents.components
-  gameState.socket = socket
-  gameState.player = gameStateComponents.player
-  console.log("GAMESTATE: ", gameState)
-  // gameState.initialise()
-  // gameState.draw()
-})
-
-
-
-
-
-
-// let timeoutFunction = setTimeout(frontEndGameState.updateBackEnd, 1000 / framerate)
-
-clearButton.addEventListener('click', () => {
-  clearInterval(timeoutFunction)
-})
-
-
-
-
-
-
-// Initialise Game Data  
-
-},{"./FrontEndGame.js":1}]},{},[2]);

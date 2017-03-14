@@ -1,4 +1,4 @@
-// Imports 
+// Imports  
 let socket = io()
 let framerate = 30
 let frontEndGame = require('./FrontEndGame.js')
@@ -23,7 +23,16 @@ socket.on('initialiseGameState', gameStateComponents => {
     gameState.player = gameStateComponents.player
     gameState.initialise()
     gameState.draw()
+    loops()
   }
+})
+
+socket.on('updateFrontEnd', gameStateComponents => {
+  console.log('updating front end: ', socket.id) 
+  gameStateComponents = json.parse(gameStateComponents) 
+  console.log(gameStateComponents)
+  gameState.components = gameStateComponents.components 
+  gameState.player = gameStateComponents.player
 })
 
 
@@ -34,9 +43,15 @@ socket.on('initialiseGameState', gameStateComponents => {
 
 
 // let timeoutFunction = setTimeout(frontEndGameState.updateBackEnd, 1000 / framerate)
+function loops() {
+  frontEndLoop = setInterval(gameState.gameLoopFrontEnd, 1000 / framerate)
+  backEndLoop = setInterval(gameState.updateBackEnd, 1000 / framerate)
+}
 
 clearButton.addEventListener('click', () => {
-  clearInterval(timeoutFunction)
+  clearInterval(frontEndLoop) 
+  clearInterval(backEndLoop)
+  socket.emit('stop', {})
 })
 
 

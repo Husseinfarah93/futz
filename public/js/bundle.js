@@ -116,6 +116,17 @@ FrontEndGame.prototype.mountDOM = function() {
   body.appendChild(this.canvas)
 }
 
+FrontEndGame.prototype.bindMethods = function() {
+  this.mountDOM = this.mountDOM.bind(this) 
+  this.clear = this.clear.bind(this) 
+  this.draw = this.draw.bind(this) 
+  this.drawPitch = this.drawPitch.bind(this) 
+  this.addEventListeners = this.addEventListeners.bind(this) 
+  this.updateBackEnd = this.updateBackEnd.bind(this) 
+  this.updateLocalPosition = this.updateLocalPosition.bind(this) 
+  this.gameLoopFrontEnd = this.gameLoopFrontEnd.bind(this)
+}
+
 FrontEndGame.prototype.clear = function() {
   this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
 }
@@ -124,12 +135,7 @@ FrontEndGame.prototype.draw = function() {
   let ctx = this.ctx 
   // Draw Components 
   // Draw Pitch 
-  let pitchKeys = Object.keys(this.components.pitch) 
-  for(let i = 0; i < pitchKeys.length; i++) {
-    let component = this.components.players[pitchKeys[i]]
-    console.log('Pitch Component: ', component) 
-    component.draw(ctx)
-  }
+  this.drawPitch()
   // Draw Players  
   let playersComponentsKeys = Object.keys(this.components.players) 
   for(let i = 0; i < playersComponentsKeys.length; i++) {
@@ -146,12 +152,20 @@ FrontEndGame.prototype.draw = function() {
   }
 }
 
+FrontEndGame.prototype.drawPitch = function() {
+  let ctx = this.ctx
+  ctx.fillStyle = '#167F39'
+  ctx.fillRect(0, 0, this.canvas.width, this.canvas.height)
+}
+
 FrontEndGame.prototype.addEventListeners = function() {
+  let self = this
   window.addEventListener('keydown', e => {
     // Update the locl state for positions to be updated
     let code = e.keyCode
     if(code === 37 || code === 38 || code === 39 || code === 40) {
-      this.keyDown[code] = true
+      console.log('****', self.keysDown)
+      self.keysDown[code].val = true
     }
   })
 
@@ -159,35 +173,39 @@ FrontEndGame.prototype.addEventListeners = function() {
     // Update the locl state for positions to be updated
     let code = e.keyCode
     if(code === 37 || code === 38 || code === 39 || code === 40) {
-      this.keyDown[code] = false
+      self.keysDown[code].val = false
     }
   })
 }
 
 FrontEndGame.prototype.updateBackEnd = function() {
+  // console.log("updating back end", this.player.newPosition)
   if(this.socket) {
     this.socket.emit('updatePlayerPosition', {
       id: this.socket.id,
-      player: this.player
+      newPosition: this.player.newPosition
     })
   }
 }
 
 FrontEndGame.prototype.updateLocalPosition = function() {
+  // console.log(this.keysDown)
   let keys = Object.keys(this.keysDown) 
   for(let i = 0; i < keys.length; i++) {
     let obj = this.keysDown[keys[i]] 
     if(obj.val) {
       if(obj.direction === "LEFT") {
-
+        this.player.newPosition.x -= 0.001
       }
       else if(obj.direction === "UP") {
-
+        this.player.newPosition.y -= 0.001
       }
       else if(obj.direction === "RIGHT") {
-
+        this.player.newPosition.x += 0.001
       }
-      elseif(obj.direction === "DOWN")
+      else if(obj.direction === "DOWN") {
+        this.player.newPosition.y += 0.001
+      }
     }
 
   }
@@ -198,12 +216,23 @@ FrontEndGame.prototype.getCorrectPlayer = function() {
 }
 
 FrontEndGame.prototype.initialise = function() {
+  this.addEventListeners()
   this.mountDOM() 
+  this.bindMethods()
 }
+
+FrontEndGame.prototype.gameLoopFrontEnd = function() {
+  this.clear() 
+  this.updateLocalPosition() 
+  this.draw() 
+}
+
+
+
 
 module.exports = FrontEndGame
 },{}],3:[function(require,module,exports){
-// Imports 
+// Imports  
 let socket = io()
 let framerate = 30
 let frontEndGame = require('./FrontEndGame.js')
@@ -228,7 +257,16 @@ socket.on('initialiseGameState', gameStateComponents => {
     gameState.player = gameStateComponents.player
     gameState.initialise()
     gameState.draw()
+    loops()
   }
+})
+
+socket.on('updateFrontEnd', gameStateComponents => {
+  console.log('updating front end: ', socket.id) 
+  gameStateComponents = json.parse(gameStateComponents) 
+  console.log(gameStateComponents)
+  gameState.components = gameStateComponents.components 
+  gameState.player = gameStateComponents.player
 })
 
 
@@ -239,9 +277,15 @@ socket.on('initialiseGameState', gameStateComponents => {
 
 
 // let timeoutFunction = setTimeout(frontEndGameState.updateBackEnd, 1000 / framerate)
+function loops() {
+  frontEndLoop = setInterval(gameState.gameLoopFrontEnd, 1000 / framerate)
+  backEndLoop = setInterval(gameState.updateBackEnd, 1000 / framerate)
+}
 
 clearButton.addEventListener('click', () => {
-  clearInterval(timeoutFunction)
+  clearInterval(frontEndLoop) 
+  clearInterval(backEndLoop)
+  socket.emit('stop', {})
 })
 
 

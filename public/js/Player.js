@@ -3,6 +3,10 @@ function Player(centreX, centreY, radius, team, game, socketId) {
   this.centreY = centreY
   this.radius = radius 
   this.team = team
+  this.newPosition = {
+    x: 0, 
+    y: 0
+  }
   // this.matterObj = game.Matter.Bodies.circle(this.centreX, this.centreY, this.radius)
   // game.Matter.World.add(game.engine.world, this.matterObj)
 }

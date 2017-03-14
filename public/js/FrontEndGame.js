@@ -30,15 +30,15 @@ FrontEndGame.prototype.draw = function() {
   let pitchKeys = Object.keys(this.components.pitch) 
   for(let i = 0; i < pitchKeys.length; i++) {
     let component = this.components.players[pitchKeys[i]]
-    console.log('Pitch Component: ', component.constructor) 
+    console.log('Pitch Component: ', component) 
     component.draw(ctx)
   }
   // Draw Players  
   let playersComponentsKeys = Object.keys(this.components.players) 
   for(let i = 0; i < playersComponentsKeys.length; i++) {
     let component = this.components.players[playersComponentsKeys[i]] 
-    console.log("player component:a ", component.constructor)
-    // component.draw(ctx)
+    // console.log("player component: ", component)
+    component.draw(ctx)
   }
   // Draw Balls 
   let ballComponentKeys = Object.keys(this.components.balls) 
@@ -98,6 +98,10 @@ FrontEndGame.prototype.updateLocalPosition = function() {
 
 FrontEndGame.prototype.getCorrectPlayer = function() {
   return this.components.players.socket.id
+}
+
+FrontEndGame.prototype.initialise = function() {
+  this.mountDOM() 
 }
 
 module.exports = FrontEndGame

@@ -5,7 +5,6 @@ function Player(centreX, centreY, radius, team, game, socketId) {
   this.team = team
   // this.matterObj = game.Matter.Bodies.circle(this.centreX, this.centreY, this.radius)
   // game.Matter.World.add(game.engine.world, this.matterObj)
-  // this.game.components.players[socketId] = this
 }
 
 Player.prototype.update = function() {

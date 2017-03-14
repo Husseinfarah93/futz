@@ -3,7 +3,7 @@ let socket = io()
 let framerate = 30
 let frontEndGame = require('./FrontEndGame.js')
 let gameState;
-
+let json = require('json-fn')
 let clearButton = document.createElement('button')
 clearButton.innerHTML = 'clear'
 document.body.appendChild(clearButton)
@@ -12,17 +12,21 @@ document.body.appendChild(clearButton)
 
 
 // Socket Events 
+// Set up initial game state for each client
 socket.on('initialiseGameState', gameStateComponents => {
-  console.log("HERE", typeof gameStateComponents, gameStateComponents)
-  // gameStateComponents = JSON.parse(gameStateComponents)
-  // gameState = new frontEndGame(350, 500, gameStateComponents.player)
-  // gameState.components = gameStateComponents.components
-  // gameState.socket = socket
-  // gameState.player = gameStateComponents.player
-  // console.log("GAMESTATE: ", gameState)
-  // // gameState.initialise()
-  // gameState.draw()
+  console.log("initialising: ", socket.id)
+  if(!gameState) {
+    gameStateComponents = json.parse(gameStateComponents)
+    gameState = new frontEndGame(350, 500, gameStateComponents.player)
+    gameState.components = gameStateComponents.components
+    gameState.socket = socket
+    gameState.player = gameStateComponents.player
+    gameState.initialise()
+    gameState.draw()
+  }
 })
+
+
 
 
 
@@ -40,4 +44,4 @@ clearButton.addEventListener('click', () => {
 
 
 
-// Initialise Game Data  
+

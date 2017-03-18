@@ -5,7 +5,11 @@ function FrontEndGame(viewportHeight, viewportWidth, player) {
   this.ctx = this.canvas.getContext('2d')
   this.canvas.height = viewportHeight
   this.canvas.width = viewportWidth
+  this.canvas.height = this.canvas.height * 1.2 
+  this.canvas.width = this.canvas.width * 2
   this.player = player
+  document.body.style.width = this.canvas.width + 'px'
+
   this.keysDown = {
     "37": {val: false, direction: "LEFT"}, 
     "38": {val: false, direction: "UP"},
@@ -39,6 +43,14 @@ FrontEndGame.prototype.draw = function() {
   // Draw Components 
   // Draw Pitch 
   this.drawPitch()
+  // Draw Goals
+  let goalsComponentsKeys = Object.keys(this.components.goals)  
+  // console.log('goal shit: ', goalsComponentsKeys)
+  for(let i = 0; i < goalsComponentsKeys.length; i++) {
+    let component = this.components.goals[goalsComponentsKeys[i]] 
+    // console.log("goal component: ", component)
+    component.draw(ctx)
+  }
   // Draw Players  
   let playersComponentsKeys = Object.keys(this.components.players) 
   for(let i = 0; i < playersComponentsKeys.length; i++) {
@@ -50,7 +62,7 @@ FrontEndGame.prototype.draw = function() {
   let ballComponentKeys = Object.keys(this.components.balls) 
   for(let i = 0; i < ballComponentKeys.length; i++) {
     let component = this.components.balls[ballComponentKeys[i]]
-    console.log('Ball Component: ', component) 
+    // console.log('Ball Component: ', component) 
     component.draw(ctx)
   }
 }
@@ -67,7 +79,6 @@ FrontEndGame.prototype.addEventListeners = function() {
     // Update the locl state for positions to be updated
     let code = e.keyCode
     if(code === 37 || code === 38 || code === 39 || code === 40) {
-      console.log('****', self.keysDown)
       self.keysDown[code].val = true
     }
   })
@@ -98,16 +109,16 @@ FrontEndGame.prototype.updateLocalPosition = function() {
     let obj = this.keysDown[keys[i]] 
     if(obj.val) {
       if(obj.direction === "LEFT") {
-        this.player.newPosition.x -= 0.001
+        this.player.newPosition.x -= 0.00125
       }
       else if(obj.direction === "UP") {
-        this.player.newPosition.y -= 0.001
+        this.player.newPosition.y -= 0.00125
       }
       else if(obj.direction === "RIGHT") {
-        this.player.newPosition.x += 0.001
+        this.player.newPosition.x += 0.00125
       }
       else if(obj.direction === "DOWN") {
-        this.player.newPosition.y += 0.001
+        this.player.newPosition.y += 0.00125
       }
     }
 

@@ -1,12 +1,12 @@
 // Imports  
 let socket = io()
-let framerate = 30
+let framerate = 60
 let frontEndGame = require('./FrontEndGame.js')
 let gameState;
 let json = require('json-fn')
 let clearButton = document.createElement('button')
 clearButton.innerHTML = 'clear'
-document.body.appendChild(clearButton)
+// document.body.appendChild(clearButton)
 
 
 
@@ -22,17 +22,23 @@ socket.on('initialiseGameState', gameStateComponents => {
     gameState.socket = socket
     gameState.player = gameStateComponents.player
     gameState.initialise()
+    document.body.appendChild(clearButton)
     gameState.draw()
     loops()
   }
 })
 
 socket.on('updateFrontEnd', gameStateComponents => {
-  console.log('updating front end: ', socket.id) 
+  // console.log('updating front end: ', socket.id) 
   gameStateComponents = json.parse(gameStateComponents) 
-  console.log(gameStateComponents)
+  // console.log(gameStateComponents.velocity)
   gameState.components = gameStateComponents.components 
   gameState.player = gameStateComponents.player
+})
+
+socket.on('goal', res => {
+  let node = res.team === 'left' ? document.getElementById('leftScore') : document.getElementById('rightScore')
+  node.innerHTML = parseInt(node.innerHTML) + 1
 })
 
 

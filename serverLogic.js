@@ -9,7 +9,7 @@ Front end
 Move updates or whatever 
 Send to back end 
 
-Back end updates current position of shit 
+Back end updates current position
 Does all calculations 
 Sends Game state back to client 
 

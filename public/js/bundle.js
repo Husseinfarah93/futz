@@ -102,8 +102,8 @@ function FrontEndGame(viewportHeight, viewportWidth, player) {
   this.ctx = this.canvas.getContext('2d')
   this.canvas.height = viewportHeight
   this.canvas.width = viewportWidth
-  this.canvas.height = this.canvas.height * 1.2 
-  this.canvas.width = this.canvas.width * 2
+  this.canvas.height = this.canvas.height * 1.2 * 2
+  this.canvas.width = this.canvas.width * 2 * 1.5
   this.player = player
   document.body.style.width = this.canvas.width + 'px'
 
@@ -138,30 +138,28 @@ FrontEndGame.prototype.clear = function() {
 FrontEndGame.prototype.draw = function() {
   let ctx = this.ctx 
   // Draw Components 
-  // Draw Pitch 
-  this.drawPitch()
-  // Draw Goals
-  let goalsComponentsKeys = Object.keys(this.components.goals)  
-  // console.log('goal shit: ', goalsComponentsKeys)
-  for(let i = 0; i < goalsComponentsKeys.length; i++) {
-    let component = this.components.goals[goalsComponentsKeys[i]] 
-    // console.log("goal component: ", component)
-    component.draw(ctx)
-  }
-  // Draw Players  
-  let playersComponentsKeys = Object.keys(this.components.players) 
-  for(let i = 0; i < playersComponentsKeys.length; i++) {
-    let component = this.components.players[playersComponentsKeys[i]] 
-    // console.log("player component: ", component)
-    component.draw(ctx)
-  }
-  // Draw Balls 
-  let ballComponentKeys = Object.keys(this.components.balls) 
-  for(let i = 0; i < ballComponentKeys.length; i++) {
-    let component = this.components.balls[ballComponentKeys[i]]
-    // console.log('Ball Component: ', component) 
-    component.draw(ctx)
-  }
+    // Draw Pitch 
+    this.drawPitch()
+    // Draw Goals
+    let goalsComponentsKeys = Object.keys(this.components.goals)  
+    for(let i = 0; i < goalsComponentsKeys.length; i++) {
+      let component = this.components.goals[goalsComponentsKeys[i]] 
+      component.draw(ctx)
+    }
+    // Draw Players  
+    let playersComponentsKeys = Object.keys(this.components.players) 
+    for(let i = 0; i < playersComponentsKeys.length; i++) {
+      let component = this.components.players[playersComponentsKeys[i]] 
+      // console.log("player component: ", component)
+      component.draw(ctx)
+    }
+    // Draw Balls 
+    let ballComponentKeys = Object.keys(this.components.balls) 
+    for(let i = 0; i < ballComponentKeys.length; i++) {
+      let component = this.components.balls[ballComponentKeys[i]]
+      // console.log('Ball Component: ', component) 
+      component.draw(ctx)
+    }
 }
 
 FrontEndGame.prototype.drawPitch = function() {
@@ -200,22 +198,21 @@ FrontEndGame.prototype.updateBackEnd = function() {
 }
 
 FrontEndGame.prototype.updateLocalPosition = function() {
-  // console.log(this.keysDown)
   let keys = Object.keys(this.keysDown) 
   for(let i = 0; i < keys.length; i++) {
     let obj = this.keysDown[keys[i]] 
     if(obj.val) {
       if(obj.direction === "LEFT") {
-        this.player.newPosition.x -= 0.00125
+        this.player.newPosition.x -= this.player.speed
       }
       else if(obj.direction === "UP") {
-        this.player.newPosition.y -= 0.00125
+        this.player.newPosition.y -= this.player.speed
       }
       else if(obj.direction === "RIGHT") {
-        this.player.newPosition.x += 0.00125
+        this.player.newPosition.x += this.player.speed
       }
       else if(obj.direction === "DOWN") {
-        this.player.newPosition.y += 0.00125
+        this.player.newPosition.y += this.player.speed
       }
     }
 
@@ -236,6 +233,7 @@ FrontEndGame.prototype.gameLoopFrontEnd = function() {
   this.clear() 
   this.updateLocalPosition() 
   this.draw() 
+  window.requestAnimationFrame(this.gameLoopFrontEnd)
 }
 
 
@@ -245,7 +243,8 @@ module.exports = FrontEndGame
 },{}],3:[function(require,module,exports){
 // Imports  
 let socket = io()
-let framerate = 60
+let framerate2 = 60, 
+  framerate1 = 100
 let frontEndGame = require('./FrontEndGame.js')
 let gameState;
 let json = require('json-fn')
@@ -268,7 +267,6 @@ socket.on('initialiseGameState', gameStateComponents => {
     gameState.player = gameStateComponents.player
     gameState.initialise()
     document.body.appendChild(clearButton)
-    gameState.draw()
     loops()
   }
 })
@@ -295,8 +293,9 @@ socket.on('goal', res => {
 
 // let timeoutFunction = setTimeout(frontEndGameState.updateBackEnd, 1000 / framerate)
 function loops() {
-  frontEndLoop = setInterval(gameState.gameLoopFrontEnd, 1000 / framerate)
-  backEndLoop = setInterval(gameState.updateBackEnd, 1000 / framerate)
+  // frontEndLoop = setInterval(gameState.gameLoopFrontEnd, 1000 / framerate1)
+  window.requestAnimationFrame(gameState.gameLoopFrontEnd)
+  backEndLoop = setInterval(gameState.updateBackEnd, 1000 / framerate2)
 }
 
 clearButton.addEventListener('click', () => {

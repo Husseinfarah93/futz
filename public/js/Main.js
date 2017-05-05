@@ -1,6 +1,7 @@
 // Imports  
 let socket = io()
-let framerate = 60
+let framerate2 = 60, 
+  framerate1 = 100
 let frontEndGame = require('./FrontEndGame.js')
 let gameState;
 let json = require('json-fn')
@@ -23,7 +24,6 @@ socket.on('initialiseGameState', gameStateComponents => {
     gameState.player = gameStateComponents.player
     gameState.initialise()
     document.body.appendChild(clearButton)
-    gameState.draw()
     loops()
   }
 })
@@ -50,8 +50,9 @@ socket.on('goal', res => {
 
 // let timeoutFunction = setTimeout(frontEndGameState.updateBackEnd, 1000 / framerate)
 function loops() {
-  frontEndLoop = setInterval(gameState.gameLoopFrontEnd, 1000 / framerate)
-  backEndLoop = setInterval(gameState.updateBackEnd, 1000 / framerate)
+  // frontEndLoop = setInterval(gameState.gameLoopFrontEnd, 1000 / framerate1)
+  window.requestAnimationFrame(gameState.gameLoopFrontEnd)
+  backEndLoop = setInterval(gameState.updateBackEnd, 1000 / framerate2)
 }
 
 clearButton.addEventListener('click', () => {

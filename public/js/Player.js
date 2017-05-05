@@ -3,6 +3,8 @@ function Player(centreX, centreY, radius, team, game, socketId) {
   this.centreY = centreY
   this.radius = radius 
   this.team = team
+  this.originalSpeed = 0.00125 
+  this.speed = 0.00125
   this.isPressed = false
   this.newPosition = {
     x: 0, 

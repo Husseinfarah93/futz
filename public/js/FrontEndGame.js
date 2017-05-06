@@ -5,8 +5,8 @@ function FrontEndGame(viewportHeight, viewportWidth, player) {
   this.ctx = this.canvas.getContext('2d')
   this.canvas.height = viewportHeight
   this.canvas.width = viewportWidth
-  this.canvas.height = this.canvas.height * 1.2 * 2
-  this.canvas.width = this.canvas.width * 2 * 1.5
+  this.canvas.height = this.canvas.height * 1.2 
+  this.canvas.width = this.canvas.width * 1.5
   this.player = player
   document.body.style.width = this.canvas.width + 'px'
 

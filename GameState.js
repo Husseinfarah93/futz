@@ -7,8 +7,8 @@ let Ball = require('./public/js/Ball.js')
 let Goal = require('./public/js/Goal.js')
 let teams = 0
 let json = require('json-fn')
-let height = 420 * 2
-let width = 1000 * 1.5
+let height = 420 
+let width = 1000 * 1.5 / 2
 
 // Object
 function GameState() {
@@ -86,7 +86,7 @@ GameState.prototype.addEngineListeners = function(socket) {
 }
 
 GameState.prototype.updateEngineLoop = function(fps) {
-  this.Matter.Engine.update(this.engine, fps / 1000)
+  this.Matter.Engine.update(this.engine, 1000 / fps)
 }
 
 GameState.prototype.stopEngineUpdateLoop = function() {
@@ -115,6 +115,7 @@ GameState.prototype.stopFrontEndUpdateLoop = function() {
 }
 
 GameState.prototype.stop = function() {
+  console.log("STOPPING", this)
   this.stopEngineUpdateLoop() 
   this.stopFrontEndUpdateLoop()
 }

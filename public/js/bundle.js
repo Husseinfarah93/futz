@@ -102,8 +102,8 @@ function FrontEndGame(viewportHeight, viewportWidth, player) {
   this.ctx = this.canvas.getContext('2d')
   this.canvas.height = viewportHeight
   this.canvas.width = viewportWidth
-  this.canvas.height = this.canvas.height * 1.2 * 2
-  this.canvas.width = this.canvas.width * 2 * 1.5
+  this.canvas.height = this.canvas.height * 1.2 
+  this.canvas.width = this.canvas.width * 1.5
   this.player = player
   document.body.style.width = this.canvas.width + 'px'
 
@@ -243,14 +243,12 @@ module.exports = FrontEndGame
 },{}],3:[function(require,module,exports){
 // Imports  
 let socket = io()
-let framerate2 = 60, 
-  framerate1 = 100
 let frontEndGame = require('./FrontEndGame.js')
 let gameState;
 let json = require('json-fn')
 let clearButton = document.createElement('button')
 clearButton.innerHTML = 'clear'
-// document.body.appendChild(clearButton)
+let previousBackEndUpdate;
 
 
 
@@ -285,18 +283,14 @@ socket.on('goal', res => {
 })
 
 
-
-
-
-
-
-
-// let timeoutFunction = setTimeout(frontEndGameState.updateBackEnd, 1000 / framerate)
 function loops() {
-  // frontEndLoop = setInterval(gameState.gameLoopFrontEnd, 1000 / framerate1)
   window.requestAnimationFrame(gameState.gameLoopFrontEnd)
-  backEndLoop = setInterval(gameState.updateBackEnd, 1000 / framerate2)
+  backEndLoop = setInterval(gameState.updateBackEnd, 1000 / 60)
 }
+
+
+
+
 
 clearButton.addEventListener('click', () => {
   clearInterval(frontEndLoop) 

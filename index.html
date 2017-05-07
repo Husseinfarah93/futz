@@ -1,13 +1,54 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <link rel="stylesheet" type="text/css" href="public/style.css">
   </head>
   <body>
-    <div id="score"> 
+    <div id="score" style="display: none"> 
       Left: <span id="leftScore"> 0 </span>
-      <div />
       Right: <span id="rightScore" > 0 </span>
     </div> 
+    <div id="modal">
+      <p> Futz </p>
+      <div id="inputWrapper" >
+        <input id="name" autocomplete placeholder="NAME"></input>
+      </div>
+      <br>
+      <button id="playButton"> PLAY </button>
+      <br>
+      <button id="gameMode">
+        GAME MODE: 1 v 1
+      </button>
+      <div id='gameModeText' style="display: none">
+        THIS IS THE TEXT THAT SHOULD BE HIDDEN
+        OISNFOIANF
+      </div>
+      <br>
+      <button id="settingsButton">
+        SETTINGS
+      </button>
+      <div id='settingsText' style="display: none">
+        THIS IS THE TEXT THAT SHOULD BE HIDDEN
+        OISNFOIANF
+      </div>
+      <br>
+      <div id='explanation'>
+          <p style="text-align: left">
+          Gameplay
+          </p>
+          <ul>
+            <li>
+              Move around with arrow keys
+            </li>
+            <li>
+              Score Goals
+            </li>
+            <li>
+              umm have fun?
+            </li>
+          </ul>
+      </div>
+    </div>
     <script src="/socket.io/socket.io.js"></script>
     <script type="text/javascript" src="/public/js/bundle.js"> </script>  
   </body>

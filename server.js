@@ -26,11 +26,16 @@ http.listen(3000, '0.0.0.0', () => {
 
 io.on('connection', socket => {
   console.log("connection: ", socket.id)
-  gameState.initialiseGame(socket, io)
+
+  socket.on('initialiseGame', () => {
+    gameState.initialiseGame(socket, io)
+    gameState.updateEngineLoop(60)
+    gameState.updateFrontEndLoop(40, socket)
+  })
 
   socket.on('disconnect', () => {
     console.log("DISCONNECT", socket.id) 
-    gameState.playerLeave(socket.id)
+    // gameState.playerLeave(socket.id)
   })
 
   socket.on('stop', gameState.stop)
@@ -38,7 +43,4 @@ io.on('connection', socket => {
   socket.on('updatePlayerPosition', playerInfo => {
     gameState.updatePlayerPosition(socket, playerInfo)
   })
-
-  gameState.updateEngineLoop(60)
-  gameState.updateFrontEndLoop(40, socket)
 })

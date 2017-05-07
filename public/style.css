@@ -1,0 +1,32 @@
+#modal {
+  background-color: grey;
+  width: 300px;
+  padding: 15px;
+  padding-top: 5px
+}
+input:focus {
+  outline: none
+}
+
+input {
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center
+}
+p {
+   text-align: center
+}
+
+#inputWrapper {
+
+}
+button {
+  display: block; 
+  border-radius: 0%;
+  text-align: center;
+  width: 100%;
+   background-color: #45a049
+}
+button:hover {
+  background-color: #45a049
+}

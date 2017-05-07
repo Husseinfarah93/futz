@@ -185,7 +185,7 @@ GameState.prototype.createBall = function(socket) {
   newBall = putMethodsOnTheObject(newBall) 
   let numBall = Object.keys(this.components.balls).length + 1
   let matterObj = this.Matter.Bodies.circle(newBall.centreX, newBall.centreY, newBall.radius)  
-  matterObj.restitution = 1
+  matterObj.restitution = 0.8
   matterObj.matterType = 'ball'
   this.components.balls[numBall] = newBall 
   this.matterComponents.balls[numBall] = matterObj
@@ -195,13 +195,13 @@ GameState.prototype.createBall = function(socket) {
 GameState.prototype.createWalls = function(socket) {
   // Create Actual Walls
   let ground = this.Matter.Bodies.rectangle(width/2, height, width, 1, {isStatic: true})
-  ground.restitution = 0.8
+  // ground.restitution = 0.8
   let ceiling = this.Matter.Bodies.rectangle(width/2, 0, width, 1, {isStatic: true})
-  ceiling.restitution = 0.8
+  // ceiling.restitution = 0.8
   let rightWall = this.Matter.Bodies.rectangle(width, height / 2, 1, height, {isStatic: true})
-  rightWall.restitution = 0.8
+  // rightWall.restitution = 0.8
   let leftWall = this.Matter.Bodies.rectangle(0, height / 2, 1, height, {isStatic: true})
-  leftWall.restitution = 0.8
+  // leftWall.restitution = 0.8
   this.Matter.World.add(this.engine.world, [ground, ceiling, rightWall, leftWall])
 }
 

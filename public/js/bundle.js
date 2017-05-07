@@ -246,9 +246,12 @@ let socket = io()
 let frontEndGame = require('./FrontEndGame.js')
 let gameState;
 let json = require('json-fn')
-let clearButton = document.createElement('button')
-clearButton.innerHTML = 'clear'
 let previousBackEndUpdate;
+let settings = document.getElementById('settingsButton')
+let gameMode = document.getElementById('gameMode')
+let play = document.getElementById('playButton')
+let shouldDisplaySettings = false
+let shouldDisplayGameMode = false
 
 
 
@@ -264,7 +267,6 @@ socket.on('initialiseGameState', gameStateComponents => {
     gameState.socket = socket
     gameState.player = gameStateComponents.player
     gameState.initialise()
-    document.body.appendChild(clearButton)
     loops()
   }
 })
@@ -291,12 +293,34 @@ function loops() {
 
 
 
-
-clearButton.addEventListener('click', () => {
-  clearInterval(frontEndLoop) 
-  clearInterval(backEndLoop)
-  socket.emit('stop', {})
+settings.addEventListener('click', () => {
+  	let elem = document.getElementById('settingsText')	
+    if(shouldDisplaySettings) {
+			elem.style.display = 'none'
+    }
+    else {
+    	elem.style.display = 'block'
+    }
+    shouldDisplaySettings = !shouldDisplaySettings
 })
+
+gameMode.addEventListener('click', () => {
+  	let elem = document.getElementById('gameModeText')	
+    if(shouldDisplayGameMode) {
+			elem.style.display = 'none'
+    }
+    else {
+    	elem.style.display = 'block'
+    }
+    shouldDisplayGameMode = !shouldDisplayGameMode
+})
+
+play.addEventListener('click', () => {
+	let modal = document.getElementById('modal')
+  modal.style.display = 'none'
+  socket.emit('initialiseGame')
+})
+
 
 
 
